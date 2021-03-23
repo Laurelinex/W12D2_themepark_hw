@@ -1,20 +1,16 @@
 import attractions.Attraction;
 import behaviours.IReviewed;
+import behaviours.ISecurity;
 import people.Visitor;
-import stalls.Stall;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ThemePark {
 
-    private ArrayList<Attraction> attractions;
-    private ArrayList<Stall> stalls;
     private ArrayList<IReviewed> allParkLocations;
 
     public ThemePark() {
-        this.attractions = new ArrayList<Attraction>();
-        this.stalls = new ArrayList<Stall>();
         this.allParkLocations = new ArrayList<IReviewed>();
     }
 
@@ -37,6 +33,20 @@ public class ThemePark {
             allReviews.put(location.getName(), location.getRating());
         }
         return allReviews;
+    }
+
+    public ArrayList<IReviewed> getAllAllowedFor(Visitor visitor) {
+        ArrayList<IReviewed> allowedAttractions = new ArrayList<>();
+        for(IReviewed attraction : allParkLocations) {
+            if(attraction instanceof ISecurity) {
+                if(((ISecurity) attraction).isAllowedTo(visitor)) {
+                    allowedAttractions.add((IReviewed) attraction);
+                }
+            } else {
+                allowedAttractions.add(attraction);
+            }
+        }
+        return allowedAttractions;
     }
 
 }
